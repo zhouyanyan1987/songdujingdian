@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禅意诵读 - 心境如水，文字如禅</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 禅意色彩系统 */
+            --ink-green: #2D5A47;
+            --rice-white: #FAF9F6;
+            --pure-white: #FFFFFF;
+            --deep-gray: #4A4A4A;
+            --mid-gray: #888888;
+            --light-gray: #EAEAEA;
+            --gold-stone: #C0A062;
+            --warning: #D97706;
+            --error: #B91C1C;
+            
+            /* 夜间模式 */
+            --dark-bg: #1C1C1E;
+            --dark-card: #2D2D2F;
+            --dark-text: #E2E2E2;
+            --dark-green: #5E8B7E;
+            
+            /* 间距系统 */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-xxl: 64px;
+            --space-xxxl: 96px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--rice-white);
+            color: var(--deep-gray);
+            line-height: 1.8;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 var(--space-xxl);
+            min-height: 100vh;
+        }
+        
+        /* 标题字体 */
+        .zen-heading {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+        }
+        
+        /* 页面基础样式 */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 导航栏 */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-xl) 0;
+            margin-bottom: var(--space-xxl);
+        }
+        
+        .nav-title {
+            font-size: 36px;
+            color: var(--ink-green);
+            text-align: center;
+            flex: 1;
+        }
+        
+        .dark-mode .nav-title {
+            color: var(--dark-green);
+        }
+        
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--deep-gray);
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(45, 90, 71, 0.1);
+        }
+        
+        .dark-mode .nav-btn {
+            color: var(--dark-text);
+        }
+        
+        /* 卡片样式 */
+        .zen-card {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: var(--space-lg) var(--space-md);
+            margin-bottom: var(--space-md);
+            box-shadow: 0 12px 24px rgba(45, 90, 71, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            border: 1px solid rgba(45, 90, 71, 0.05);
+        }
+        
+        .dark-mode .zen-card {
+            background: var(--dark-card);
+            border-color: rgba(94, 139, 126, 0.2);
+        }
+        
+        .zen-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(45, 90, 71, 0.12);
+        }
+        
+        /* 书籍卡片特定样式 */
+        .book-title {
+            font-size: 24px;
+            color: var(--ink-green);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .dark-mode .book-title {
+            color: var(--dark-green);
+        }
+        
+        .book-stats {
+            color: var(--mid-gray);
+            font-size: 14px;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .dark-mode .book-stats {
+            color: #AAAAAA;
+        }
+        
+        /* 进度条 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: var(--space-sm) 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ink-green), #4A7C59);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .dark-mode .progress-fill {
+            background: linear-gradient(90deg, var(--dark-green), #7FA894);
+        }
+        
+        /* 章节列表 */
+        .chapter-list {
+            list-style: none;
+        }
+        
+        .chapter-item {
+            background: var(--pure-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 16px;
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dark-mode .chapter-item {
+            background: var(--dark-card);
+            border-color: rgba(94, 139, 126, 0.3);
+        }
+        
+        .chapter-item:hover {
+            border-color: var(--ink-green);
+            background: rgba(45, 90, 71, 0.02);
+        }
+        
+        .dark-mode .chapter-item:hover {
+            border-color: var(--dark-green);
+            background: rgba(94, 139, 126, 0.1);
+        }
+        
+        .chapter-item.completed {
+            background: linear-gradient(135deg, rgba(192, 160, 98, 0.1), rgba(192, 160, 98, 0.05));
+            border-color: var(--gold-stone);
+        }
+        
+        .dark-mode .chapter-item.completed {
+            background: linear-gradient(135deg, rgba(192, 160, 98, 0.2), rgba(192, 160, 98, 0.1));
+        }
+        
+        .chapter-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--deep-gray);
+            margin-bottom: 4px;
+        }
+        
+        .dark-mode .chapter-title {
+            color: var(--dark-text);
+        }
+        
+        .chapter-preview {
+            font-size: 14px;
+            color: var(--mid-gray);
+        }
+        
+        .dark-mode .chapter-preview {
+            color: #AAAAAA;
+        }
+        
+        .chapter-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink-green);
+        }
+        
+        .dark-mode .chapter-count {
+            color: var(--dark-green);
+        }
+        
+        .chapter-item.completed .chapter-count {
+            color: var(--gold-stone);
+        }
+        
+        /* 诵读内容区 */
+        .reading-container {
+            background: var(--pure-white);
+            border-radius: 24px;
+            padding: var(--space-xxl);
+            margin-bottom: var(--space-xl);
+            box-shadow: 0 12px 24px rgba(45, 90, 71, 0.08);
+            min-height: 60vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-mode .reading-container {
+            background: var(--dark-card);
+        }
+        
+        .reading-content {
+            font-size: 17px;
+            line-height: 2;
+            color: var(--deep-gray);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            letter-spacing: 0.5px;
+        }
+        
+        .dark-mode .reading-content {
+            color: var(--dark-text);
+        }
+        
+        /* 进度显示 */
+        .progress-display {
+            text-align: center;
+            margin: var(--space-xl) 0;
+        }
+        
+        .progress-number {
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--ink-green);
+            line-height: 1;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .dark-mode .progress-number {
+            color: var(--dark-green);
+        }
+        
+        .progress-goal {
+            font-size: 16px;
+            color: var(--mid-gray);
+        }
+        
+        .dark-mode .progress-goal {
+            color: #AAAAAA;
+        }
+        
+        /* 浮动打卡按钮 */
+        .floating-check-btn {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            width: 72px;
+            height: 72px;
+            background: var(--ink-green);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(45, 90, 71, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .dark-mode .floating-check-btn {
+            background: var(--dark-green);
+            box-shadow: 0 8px 24px rgba(94, 139, 126, 0.3);
+        }
+        
+        .floating-check-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(45, 90, 71, 0.4);
+        }
+        
+        .dark-mode .floating-check-btn:hover {
+            box-shadow: 0 12px 32px rgba(94, 139, 126, 0.4);
+        }
+        
+        .floating-check-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* 水墨扩散效果 */
+        .ink-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45, 90, 71, 0.2) 0%, rgba(45, 90, 71, 0.1) 50%, transparent 100%);
+            pointer-events: none;
+            animation: rippleExpand 0.6s ease-out;
+        }
+        
+        @keyframes rippleExpand {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        /* 按钮样式 */
+        .zen-btn {
+            padding: var(--space-sm) var(--space-lg);
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: var(--ink-green);
+            color: var(--pure-white);
+        }
+        
+        .dark-mode .btn-primary {
+            background: var(--dark-green);
+        }
+        
+        .btn-primary:hover {
+            background: #1e4a37;
+            transform: translateY(-2px);
+        }
+        
+        .dark-mode .btn-primary:hover {
+            background: #4a7561;
+        }
+        
+        .btn-secondary {
+            background: var(--pure-white);
+            color: var(--deep-gray);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .dark-mode .btn-secondary {
+            background: var(--dark-card);
+            color: var(--dark-text);
+            border-color: rgba(94, 139, 126, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--ink-green);
+            background: rgba(45, 90, 71, 0.02);
+        }
+        
+        .dark-mode .btn-secondary:hover {
+            border-color: var(--dark-green);
+            background: rgba(94, 139, 126, 0.1);
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        /* 表单输入 */
+        .zen-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid var(--light-gray);
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--pure-white);
+            color: var(--deep-gray);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .zen-input {
+            background: var(--dark-card);
+            color: var(--dark-text);
+            border-color: rgba(94, 139, 126, 0.3);
+        }
+        
+        .zen-input:focus {
+            outline: none;
+            border-color: var(--ink-green);
+            box-shadow: 0 0 0 3px rgba(45, 90, 71, 0.1);
+        }
+        
+        .dark-mode .zen-input:focus {
+            border-color: var(--dark-green);
+            box-shadow: 0 0 0 3px rgba(94, 139, 126, 0.1);
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--pure-white);
+            border-radius: 24px;
+            padding: var(--space-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dark-mode .modal-content {
+            background: var(--dark-card);
+        }
+        
+        /* 庆祝动画 */
+        .celebration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(250, 249, 246, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .dark-mode .celebration-overlay {
+            background: rgba(28, 28, 30, 0.95);
+        }
+        
+        .celebration-content {
+            text-align: center;
+            animation: celebrationFadeIn 0.8s ease-out;
+        }
+        
+        @keyframes celebrationFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .celebration-text {
+            font-size: 48px;
+            color: var(--gold-stone);
+            margin-bottom: var(--space-lg);
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+        }
+        
+        /* 金色粒子 */
+        .golden-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--gold-stone);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: goldenFloat 3s ease-out;
+        }
+        
+        @keyframes goldenFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xxxl) var(--space-md);
+            color: var(--mid-gray);
+        }
+        
+        .dark-mode .empty-state {
+            color: #AAAAAA;
+        }
+        
+        /* 数据备份区域 */
+        .backup-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px dashed var(--light-gray);
+        }
+        
+        .dark-mode .backup-section {
+            background: var(--dark-card);
+            border-color: rgba(94, 139, 126, 0.3);
+        }
+        
+        /* 统计面板 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .stat-card {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: var(--space-md);
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(45, 90, 71, 0.05);
+        }
+        
+        .dark-mode .stat-card {
+            background: var(--dark-card);
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--ink-green);
+            margin-bottom: 4px;
+        }
+        
+        .dark-mode .stat-number {
+            color: var(--dark-green);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--mid-gray);
+        }
+        
+        .dark-mode .stat-label {
+            color: #AAAAAA;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--space-md);
+            }
+            
+            .nav-bar {
+                padding: var(--space-lg) 0;
+                margin-bottom: var(--space-lg);
+            }
+            
+            .nav-title {
+                font-size: 28px;
+            }
+            
+            .reading-container {
+                padding: var(--space-lg);
+                margin-bottom: var(--space-lg);
+            }
+            
+            .floating-check-btn {
+                bottom: var(--space-lg);
+                right: var(--space-lg);
+            }
+        }
+        
+        /* 隐藏元素 */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: 50%;
+            border-top-color: var(--ink-green);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页：书籍列表 -->
+        <div id="home-page" class="page active">
+            <div class="nav-bar">
+                <div style="width: 44px;"></div>
+                <h1 class="nav-title zen-heading">禅意诵读</h1>
+                <button class="nav-btn" onclick="showSettingsModal()" title="设置">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.69 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,18.38L11.24,20H12.76L13.13,18.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- 统计概览 -->
+            <div id="stats-overview" class="stats-grid">
+                <!-- 统计卡片将在这里动态生成 -->
+            </div>
+            
+            <div id="books-container">
+                <!-- 书籍列表将在这里动态生成 -->
+            </div>
+            
+            <div id="empty-state" class="empty-state">
+                <p style="margin-bottom: 16px;">书卷多情似故人</p>
+                <p>智慧的光芒在文字中静静流淌</p>
+            </div>
+        </div>
+
+        <!-- 书籍详情页 -->
+        <div id="book-detail-page" class="page">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="showHome()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+                    </svg>
+                </button>
+                <h2 class="nav-title zen-heading" id="book-title">书名</h2>
+                <button class="nav-btn" onclick="showBookStats()" title="统计">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3,3V21H21V3H3M19,19H5V5H19V19M16,16V13H13V16H16M11,16V8H8V16H11M6,16V10H3V16H6Z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="chapters-container">
+                <!-- 章节列表将在这里动态生成 -->
+            </div>
+        </div>
+
+        <!-- 诵读页面 -->
+        <div id="reading-page" class="page">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="goBackToBook()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+                    </svg>
+                </button>
+                <h3 class="nav-title zen-heading" id="chapter-title">章节标题</h3>
+                <button class="nav-btn" onclick="showResetConfirm()" title="重置">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,6V9L16,5L12,1V4A8,8 0 0,0 4,12H2A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C10.03,22 8.2,21.43 6.65,20.45L2,22L3.55,17.35C2.57,15.8 2,13.97 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12H6A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18V15L8,19L12,23V20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="reading-container">
+                <div class="progress-display">
+                    <div class="progress-number" id="current-count">0</div>
+                    <div class="progress-goal">目标：诵读 100 遍</div>
+                </div>
+                
+                <div class="reading-content" id="chapter-content">
+                    <!-- 章节内容将在这里显示 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮动打卡按钮 -->
+    <button class="floating-check-btn" onclick="incrementReading()" title="完成一遍诵读">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+        </svg>
+    </button>
+
+    <!-- 设置模态框 -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="zen-heading" style="color: var(--ink-green); margin-bottom: 24px;">设置</h3>
+            
+            <!-- 主题切换 -->
+            <div style="margin-bottom: 24px;">
+                <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <span>主题模式</span>
+                    <button class="zen-btn btn-secondary" onclick="toggleTheme()" id="theme-toggle">
+                        切换到夜间模式
+                    </button>
+                </label>
+            </div>
+            
+            <!-- 数据管理 -->
+            <div class="backup-section">
+                <h4 style="margin-bottom: 16px; color: var(--ink-green);">数据备份与恢复</h4>
+                <p style="margin-bottom: 16px; color: var(--mid-gray); font-size: 14px;">
+                    导出数据用于跨设备同步，或恢复之前备份的数据
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button class="zen-btn btn-primary" onclick="exportData()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        导出数据
+                    </button>
+                    <button class="zen-btn btn-secondary" onclick="document.getElementById('import-file').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        导入数据
+                    </button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
+                </div>
+            </div>
+            
+            <!-- 添加自定义书籍 -->
+            <div style="margin-bottom: 24px;">
+                <h4 style="margin-bottom: 16px; color: var(--ink-green);">添加自定义书籍</h4>
+                <button class="zen-btn btn-secondary btn-full" onclick="showAddBookModal()">
+                    添加新的经典书籍
+                </button>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="zen-btn btn-primary" onclick="hideSettingsModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加书籍模态框 -->
+    <div id="add-book-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="zen-heading" style="color: var(--ink-green); margin-bottom: 24px;">添加经典书籍</h3>
+            <form id="add-book-form">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">书籍名称</label>
+                    <input type="text" class="zen-input" id="book-name" placeholder="例如：《静心录》" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">首章内容</label>
+                    <textarea class="zen-input" id="chapter-content-input" rows="4" style="padding: 16px; height: auto; resize: vertical;" placeholder="请输入第一章节的内容..."></textarea>
+                    <p class="caption" style="margin-top: 8px; font-size: 14px;">您可以先添加第一章节，后续在书籍详情页继续添加更多章节</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" class="zen-btn btn-secondary" onclick="hideAddBookModal()" style="flex: 1;">取消</button>
+                    <button type="submit" class="zen-btn btn-primary" style="flex: 1;">添加书籍</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 重置确认模态框 -->
+    <div id="reset-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="zen-heading" style="color: var(--ink-green); margin-bottom: 16px;">重置进度</h3>
+            <p style="margin-bottom: 24px;">确定要重置当前章节的读数记录吗？此操作不可撤销。</p>
+            <div style="display: flex; gap: 12px;">
+                <button type="button" class="zen-btn btn-secondary" onclick="hideResetConfirm()" style="flex: 1;">取消</button>
+                <button type="button" class="zen-btn" onclick="resetChapterProgress()" style="flex: 1; background: var(--error); color: white;">确认重置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 庆祝动画覆盖层 -->
+    <div id="celebration-overlay" class="celebration-overlay">
+        <div class="celebration-content">
+            <div class="celebration-text zen-heading">圆满</div>
+            <p style="color: var(--mid-gray); margin-bottom: 16px;">🎉 恭喜！本章已完成100遍诵读！</p>
+        </div>
+    </div>
+
+    <script>
+        // 全局数据存储
+        let books = JSON.parse(localStorage.getItem('zenReadingBooks') || '[]');
+        let currentBookId = null;
+        let currentChapterIndex = 0;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        // 预置经典书籍数据
+        const classicBooks = [
+            {
+                id: 'lunyu',
+                name: '《论语》',
+                author: '孔子',
+                description: '儒家经典，君子之道',
+                chapters: [
+                    {
+                        title: '学而时习之',
+                        content: '子曰："学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？"',
+                        readCount: 25
+                    },
+                    {
+                        title: '为政以德',
+                        content: '子曰："为政以德，譬如北辰，居其所而众星共之。"',
+                        readCount: 0
+                    },
+                    {
+                        title: '吾日三省吾身',
+                        content: '曾子曰："吾日三省吾身：为人谋而不忠乎？与朋友交而不信乎？传不习乎？"',
+                        readCount: 15
+                    },
+                    {
+                        title: '巧言令色',
+                        content: '子曰："巧言令色，鲜矣仁。"',
+                        readCount: 0
+                    },
+                    {
+                        title: '道千乘之国',
+                        content: '子曰："道千乘之国，敬事而信，节用而爱人，使民以时。"',
+                        readCount: 8
+                    },
+                    {
+                        title: '弟子入则孝',
+                        content: '子曰："弟子，入则孝，出则悌，谨而信，泛爱众，而亲仁。行有余力，则以学文。"',
+                        readCount: 0
+                    },
+                    {
+                        title: '子夏问孝',
+                        content: '子夏问孝。子曰："色难。有事，弟子服其劳；有酒食，先生馔，曾是以为孝乎？"',
+                        readCount: 12
+                    },
+                    {
+                        title: '温故而知新',
+                        content: '子曰："温故而知新，可以为师矣。"',
+                        readCount: 0
+                    }
+                ]
+            },
+            {
+                id: 'daodejing',
+                name: '《道德经》',
+                author: '老子',
+                description: '道家经典，无为而治',
+                chapters: [
+                    {
+                        title: '第一章',
+                        content: '道可道，非常道；名可名，非常名。无名，天地之始；有名，万物之母。故常无欲，以观其妙；常有欲，以观其徼。此两者，同出而异名，同谓之玄。玄之又玄，众妙之门。',
+                        readCount: 30
+                    },
+                    {
+                        title: '第二章',
+                        content: '天下皆知美之为美，斯恶已；皆知善之为善，斯不善已。故有无相生，难易相成，长短相形，高下相倾，音声相和，前后相随。是以圣人处无为之事，行不言之教。',
+                        readCount: 0
+                    },
+                    {
+                        title: '第三章',
+                        content: '不尚贤，使民不争；不贵难得之货，使民不为盗；不见可欲，使民心不乱。是以圣人之治，虚其心，实其腹，弱其志，强其骨，常使民无知无欲。',
+                        readCount: 18
+                    },
+                    {
+                        title: '第四章',
+                        content: '道冲，而用之或不盈。渊兮，似万物之宗；挫其锐，解其纷，和其光，同其尘，湛兮，似或存。吾不知谁之子，象帝之先。',
+                        readCount: 0
+                    },
+                    {
+                        title: '第五章',
+                        content: '天地不仁，以万物为刍狗；圣人不仁，以百姓为刍狗。天地之间，其犹橐籥乎？虚而不屈，动而愈出。多言数穷，不如守中。',
+                        readCount: 22
+                    },
+                    {
+                        title: '第八章',
+                        content: '上善若水。水善利万物而不争，处众人之所恶，故几于道。居善地，心善渊，与善仁，言善信，政善治，事善能，动善时。夫唯不争，故无尤。',
+                        readCount: 0
+                    },
+                    {
+                        title: '第二十五章',
+                        content: '有物混成，先天地生。寂兮寥兮，独立而不改，周行而不殆，可以为天下母。吾不知其名，字之曰道，强为之名曰大。',
+                        readCount: 5
+                    },
+                    {
+                        title: '第八十一章',
+                        content: '信言不美，美言不信。善者不辩，辩者不善。知者不博，博者不知。圣人不积，既以为人己愈有，既以与人己愈多。',
+                        readCount: 0
+                    }
+                ]
+            },
+            {
+                id: 'daxue',
+                name: '《大学》',
+                author: '曾子',
+                description: '儒家修身齐家治国平天下',
+                chapters: [
+                    {
+                        title: '大学之道',
+                        content: '大学之道，在明明德，在亲民，在止于至善。知止而后有定，定而后能静，静而后能安，安而后能虑，虑而后能得。物有本末，事有终始，知所先后，则近道矣。',
+                        readCount: 40
+                    },
+                    {
+                        title: '格物致知',
+                        content: '古之欲明明德于天下者，先治其国；欲治其国者，先齐其家；欲齐其家者，先修其身；欲修其身者，先正其心；欲正其心者，先诚其意；欲诚其意者，先致其知；致知在格物。',
+                        readCount: 15
+                    },
+                    {
+                        title: '诚意正心',
+                        content: '所谓诚其意者，毋自欺也。如恶恶臭，如好好色，此之谓自谦。故君子必慎其独也。小人闲居为不善，无所不至，见君子而后厌然，掩其不善，而著其善。',
+                        readCount: 0
+                    },
+                    {
+                        title: '修身齐家',
+                        content: '所谓修身在正其心者，身有所愤懥，则不得其正；有所恐惧，则不得其正；有所好乐，则不得其正；有所忧患，则不得其正。心不在焉，视而不见，听而不闻，食而不知其味。此谓修身在正其心。',
+                        readCount: 8
+                    },
+                    {
+                        title: '止于至善',
+                        content: '《诗》云："瞻彼淇澳，菉竹猗猗。有斐君子，如切如磋，如琢如磨。瑟兮僩兮，赫兮喧兮。有斐君子，终不可諠兮！"如切如磋者，道学也；如琢如磨者，自修也；瑟兮僩兮者，恂栗也；赫兮喧兮者，威仪也；有斐君子，终不可諠兮者，道盛德至善，民之不能忘也。',
+                        readCount: 0
+                    }
+                ]
+            },
+            {
+                id: 'zhongyong',
+                name: '《中庸》',
+                author: '子思',
+                description: '中正平和，不偏不倚',
+                chapters: [
+                    {
+                        title: '第一章',
+                        content: '天命之谓性，率性之谓道，修道之谓教。道也者，不可须臾离也，可离非道也。是故君子戒慎乎其所不睹，恐惧乎其所不闻。莫见乎隐，莫显乎微，故君子慎其独也。',
+                        readCount: 20
+                    },
+                    {
+                        title: '第二章',
+                        content: '仲尼曰："君子中庸，小人反中庸。君子之中庸也，君子而时中；小人之中庸也，小人而无忌憚也。"',
+                        readCount: 0
+                    },
+                    {
+                        title: '第三章',
+                        content: '子曰："中庸之为德也，其至矣乎！民鲜久矣。"',
+                        readCount: 12
+                    },
+                    {
+                        title: '第十二章',
+                        content: '君子之道，费而隐。夫妇之愚，可以与知焉，及其至也，虽圣人亦有所不知焉。夫妇之不肖，可以能行焉，及其至也，虽圣人亦有所不能焉。',
+                        readCount: 0
+                    },
+                    {
+                        title: '第二十章',
+                        content: '凡为天下国家有九经，曰：修身也，尊贤也，亲亲也，敬大臣也，体群臣也，子庶民也，来百工也，柔远人也，怀诸侯也。',
+                        readCount: 6
+                    }
+                ]
+            },
+            {
+                id: 'shijing',
+                name: '《诗经》',
+                author: '佚名',
+                description: '中国最早的诗歌总集',
+                chapters: [
+                    {
+                        title: '关雎',
+                        content: '关关雎鸠，在河之洲。窈窕淑女，君子好逑。参差荇菜，左右流之。窈窕淑女，寤寐求之。求之不得，寤寐思服。悠哉悠哉，辗转反侧。参差荇菜，左右采之。窈窕淑女，琴瑟友之。参差荇菜，左右芼之。窈窕淑女，钟鼓乐之。',
+                        readCount: 35
+                    },
+                    {
+                        title: '蒹葭',
+                        content: '蒹葭苍苍，白露为霜。所谓伊人，在水一方。溯洄从之，道阻且长。溯游从之，宛在水中央。蒹葭萋萋，白露未晞。所谓伊人，在水之湄。溯洄从之，道阻且跻。溯游从之，宛在水中坻。蒹葭采采，白露未已。所谓伊人，在水之涘。溯洄从之，道阻且右。溯游从之，宛在水中沚。',
+                        readCount: 0
+                    },
+                    {
+                        title: '桃夭',
+                        content: '桃之夭夭，灼灼其华。之子于归，宜其室家。桃之夭夭，有蕡其实。之子于归，宜其家室。桃之夭夭，其叶蓁蓁。之子于归，宜其家人。',
+                        readCount: 18
+                    },
+                    {
+                        title: '击鼓',
+                        content: '击鼓其镗，踊跃用兵。土国城漕，我独南行。从孙子仲，平陈与宋。不我以归，忧心有忡。爰居爰处？爰丧其马？于以求之？于林之下。死生契阔，与子成说。执子之手，与子偕老。于嗟阔兮，不我活兮。于嗟洵兮，不我信兮。',
+                        readCount: 0
+                    },
+                    {
+                        title: '采薇',
+                        content: '采薇采薇，薇亦作止。曰归曰归，岁亦莫止。靡室靡家，玁狁之故。不遑启居，玁狁之故。采薇采薇，薇亦柔止。曰归曰归，心亦忧止。忧心烈烈，载饥载渴。我戍未定，靡使归聘。',
+                        readCount: 25
+                    },
+                    {
+                        title: '木瓜',
+                        content: '投我以木瓜，报之以琼琚。匪报也，永以为好也。投我以木桃，报之以琼瑶。匪报也，永以为好也。投我以木李，报之以琼玖。匪报也，永以为好也。',
+                        readCount: 0
+                    },
+                    {
+                        title: '黍离',
+                        content: '彼黍离离，彼稷之苗。行迈靡靡，中心摇摇。知我者，谓我心忧；不知我者，谓我何求。悠悠苍天，此何人哉？彼黍离离，彼稷之穗。行迈靡靡，中心如醉。知我者，谓我心忧；不知我者，谓我何求。悠悠苍天，此何人哉？',
+                        readCount: 10
+                    },
+                    {
+                        title: '鹿鸣',
+                        content: '呦呦鹿鸣，食野之苹。我有嘉宾，鼓瑟吹笙。吹笙鼓簧，承筐是将。人之好我，示我周行。呦呦鹿鸣，食野之蒿。我有嘉宾，德音孔昭。视民不恌，君子是则是效。我有旨酒，嘉宾式燕以敖。',
+                        readCount: 0
+                    },
+                    {
+                        title: '月出',
+                        content: '月出皎兮，佼人僚兮。舒窈纠兮，劳心悄兮。月出皓兮，佼人懰兮。舒忧受兮，劳心慅兮。月出照兮，佼人燎兮。舒夭绍兮，劳心惨兮。',
+                        readCount: 14
+                    },
+                    {
+                        title: '东山',
+                        content: '我徂东山，慆慆不归。我来自东，零雨其濛。我东曰归，我心西悲。制彼裳衣，勿士行枚。蜎蜎者蠋，烝在桑野。敦彼独宿，亦在车下。我徂东山，慆慆不归。我来自东，零雨其濛。果臝之实，亦施于宇。伊威在室，蠨蛸在户。町畽鹿场，熠燿宵行。',
+                        readCount: 0
+                    }
+                ]
+            }
+        ];
+
+        // 页面管理
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function showHome() {
+            showPage('home-page');
+            renderBooks();
+            renderStats();
+            currentBookId = null;
+        }
+
+        function goBackToBook() {
+            if (currentBookId) {
+                showBookDetail(currentBookId);
+            } else {
+                showHome();
+            }
+        }
+
+        // 数据管理
+        function saveBooks() {
+            localStorage.setItem('zenReadingBooks', JSON.stringify(books));
+        }
+
+        function initializeData() {
+            if (books.length === 0) {
+                // 初始化预置书籍数据
+                books = classicBooks.map(book => ({
+                    ...book,
+                    createdAt: new Date().toISOString(),
+                    lastRead: null
+                }));
+                saveBooks();
+            }
+        }
+
+        function addCustomBook(name, chapterContent) {
+            const book = {
+                id: 'custom_' + Date.now(),
+                name: name,
+                author: '自定义',
+                description: '用户自定义书籍',
+                chapters: [{
+                    title: '第一章',
+                    content: chapterContent,
+                    readCount: 0
+                }],
+                createdAt: new Date().toISOString(),
+                lastRead: null
+            };
+            books.push(book);
+            saveBooks();
+            return book;
+        }
+
+        function addChapterToBook(bookId, title, content) {
+            const book = books.find(b => b.id === bookId);
+            if (book) {
+                book.chapters.push({
+                    title: title,
+                    content: content,
+                    readCount: 0
+                });
+                saveBooks();
+                return true;
+            }
+            return false;
+        }
+
+        // 渲染函数
+        function renderStats() {
+            const container = document.getElementById('stats-overview');
+            const totalBooks = books.length;
+            const totalChapters = books.reduce((sum, book) => sum + book.chapters.length, 0);
+            const completedChapters = books.reduce((sum, book) => 
+                sum + book.chapters.filter(ch => ch.readCount >= 100).length, 0);
+            const totalReadCount = books.reduce((sum, book) => 
+                sum + book.chapters.reduce((chSum, ch) => chSum + ch.readCount, 0), 0);
+            const completionRate = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalBooks}</div>
+                    <div class="stat-label">经典书籍</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalChapters}</div>
+                    <div class="stat-label">总章节数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalReadCount}</div>
+                    <div class="stat-label">总读数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${completionRate}%</div>
+                    <div class="stat-label">完成率</div>
+                </div>
+            `;
+        }
+
+        function renderBooks() {
+            const container = document.getElementById('books-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (books.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.innerHTML = books.map(book => {
+                const totalChapters = book.chapters.length;
+                const completedChapters = book.chapters.filter(ch => ch.readCount >= 100).length;
+                const totalReadCount = book.chapters.reduce((sum, ch) => sum + ch.readCount, 0);
+                const overallProgress = totalChapters > 0 ? (completedChapters / totalChapters * 100) : 0;
+
+                return `
+                    <div class="zen-card" onclick="showBookDetail('${book.id}')">
+                        <div class="book-title zen-heading">${book.name}</div>
+                        <div class="book-stats">${completedChapters}/${totalChapters} 章完成 · 总读数 ${totalReadCount}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${overallProgress}%;"></div>
+                        </div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end;">
+                            <button class="zen-btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 14px;" 
+                                    onclick="event.stopPropagation(); addNewChapter('${book.id}')">
+                                添加章节
+                            </button>
+                            <button class="zen-btn" style="height: 32px; padding: 0 12px; font-size: 14px; background: var(--error); color: white;" 
+                                    onclick="event.stopPropagation(); confirmDeleteBook('${book.id}')">
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showBookDetail(bookId) {
+            currentBookId = bookId;
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            document.getElementById('book-title').textContent = book.name;
+            renderChapters(book);
+            showPage('book-detail-page');
+        }
+
+        function renderChapters(book) {
+            const container = document.getElementById('chapters-container');
+            container.innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <button class="zen-btn btn-primary" onclick="addNewChapter('${book.id}')">
+                        添加新章节
+                    </button>
+                </div>
+            `;
+
+            container.innerHTML += `
+                <ul class="chapter-list">
+                    ${book.chapters.map((chapter, index) => `
+                        <li class="chapter-item ${chapter.readCount >= 100 ? 'completed' : ''}" 
+                            onclick="showChapterReading('${book.id}', ${index})">
+                            <div style="flex: 1;">
+                                <div class="chapter-title">${chapter.title}</div>
+                                <div class="chapter-preview">${chapter.content.substring(0, 30)}...</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="chapter-count">${chapter.readCount}/100</div>
+                                ${chapter.readCount >= 100 ? 
+                                    '<div style="color: var(--gold-stone); margin-top: 4px;">✓ 已完成</div>' : ''}
+                            </div>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        }
+
+        function showChapterReading(bookId, chapterIndex) {
+            const book = books.find(b => b.id === bookId);
+            if (!book || !book.chapters[chapterIndex]) return;
+
+            currentBookId = bookId;
+            currentChapterIndex = chapterIndex;
+            const chapter = book.chapters[chapterIndex];
+
+            document.getElementById('chapter-title').textContent = `${chapter.title}`;
+            document.getElementById('chapter-content').textContent = chapter.content;
+            updateReadingProgress();
+            showPage('reading-page');
+        }
+
+        // 打卡功能
+        function incrementReading() {
+            const book = books.find(b => b.id === currentBookId);
+            if (!book || !book.chapters[currentChapterIndex]) return;
+
+            // 创建水墨扩散效果
+            createInkRipple(event.target.closest('.floating-check-btn') || event.target);
+
+            book.chapters[currentChapterIndex].readCount++;
+            book.lastRead = new Date().toISOString();
+            saveBooks();
+            updateReadingProgress();
+            
+            // 如果达到目标，显示庆祝动画
+            if (book.chapters[currentChapterIndex].readCount === 100) {
+                setTimeout(() => {
+                    showCelebration();
+                }, 600);
+            }
+        }
+
+        function createInkRipple(button) {
+            const ripple = document.createElement('div');
+            ripple.className = 'ink-ripple';
+            ripple.style.width = '150px';
+            ripple.style.height = '150px';
+            ripple.style.left = '50%';
+            ripple.style.top = '50%';
+            ripple.style.marginLeft = '-75px';
+            ripple.style.marginTop = '-75px';
+            
+            button.style.position = 'relative';
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        function updateReadingProgress() {
+            const book = books.find(b => b.id === currentBookId);
+            if (!book || !book.chapters[currentChapterIndex]) return;
+
+            const chapter = book.chapters[currentChapterIndex];
+            document.getElementById('current-count').textContent = chapter.readCount;
+        }
+
+        // 庆祝动画
+        function showCelebration() {
+            const overlay = document.getElementById('celebration-overlay');
+            overlay.style.display = 'flex';
+            
+            // 创建金色粒子
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'golden-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = '100%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                overlay.appendChild(particle);
+            }
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                // 清理粒子
+                overlay.querySelectorAll('.golden-particle').forEach(p => p.remove());
+            }, 3000);
+        }
+
+        // 章节管理
+        function addNewChapter(bookId) {
+            const title = prompt('请输入章节标题：');
+            if (!title) return;
+
+            const content = prompt('请输入章节内容：');
+            if (!content) return;
+
+            if (addChapterToBook(bookId, title, content)) {
+                showBookDetail(bookId);
+            }
+        }
+
+        function resetChapterProgress() {
+            const book = books.find(b => b.id === currentBookId);
+            if (!book || !book.chapters[currentChapterIndex]) return;
+
+            book.chapters[currentChapterIndex].readCount = 0;
+            saveBooks();
+            updateReadingProgress();
+            hideResetConfirm();
+        }
+
+        // 书籍删除
+        function confirmDeleteBook(bookId) {
+            if (confirm('确定要删除这本书吗？此操作不可撤销。')) {
+                books = books.filter(b => b.id !== bookId);
+                saveBooks();
+                renderBooks();
+                renderStats();
+            }
+        }
+
+        // 模态框管理
+        function showSettingsModal() {
+            document.getElementById('settings-modal').classList.add('active');
+        }
+
+        function hideSettingsModal() {
+            document.getElementById('settings-modal').classList.remove('active');
+        }
+
+        function showAddBookModal() {
+            document.getElementById('add-book-modal').classList.add('active');
+        }
+
+        function hideAddBookModal() {
+            document.getElementById('add-book-modal').classList.remove('active');
+            document.getElementById('add-book-form').reset();
+        }
+
+        function showResetConfirm() {
+            document.getElementById('reset-modal').classList.add('active');
+        }
+
+        function hideResetConfirm() {
+            document.getElementById('reset-modal').classList.remove('active');
+        }
+
+        // 统计数据
+        function showBookStats() {
+            const book = books.find(b => b.id === currentBookId);
+            if (!book) return;
+
+            const totalChapters = book.chapters.length;
+            const completedChapters = book.chapters.filter(ch => ch.readCount >= 100).length;
+            const totalReadCount = book.chapters.reduce((sum, ch) => sum + ch.readCount, 0);
+            const averageCount = totalChapters > 0 ? Math.round(totalReadCount / totalChapters) : 0;
+
+            alert(`${book.name} 统计：
+
+📚 章节数量：${totalChapters}章
+✅ 已完成：${completedChapters}章
+📖 总读数：${totalReadCount}遍
+📊 平均读数：${averageCount}遍/章节
+🎯 完成率：${totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0}%`);
+        }
+
+        // 主题切换
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            const toggle = document.getElementById('theme-toggle');
+            toggle.textContent = isDarkMode ? '切换到日间模式' : '切换到夜间模式';
+        }
+
+        // 数据导入导出
+        function exportData() {
+            const data = {
+                books: books,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `禅意诵读备份_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            URL.revokeObjectURL(url);
+            
+            alert('数据导出成功！请妥善保存备份文件。');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (confirm('导入数据将覆盖当前所有数据，是否继续？')) {
+                        books = data.books || [];
+                        saveBooks();
+                        renderBooks();
+                        renderStats();
+                        alert('数据导入成功！');
+                    }
+                } catch (error) {
+                    alert('数据格式错误，请检查备份文件是否正确。');
+                }
+            };
+            reader.readAsText(file);
+            
+            // 清空文件输入
+            event.target.value = '';
+        }
+
+        // 表单处理
+        document.getElementById('add-book-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('book-name').value.trim();
+            const content = document.getElementById('chapter-content-input').value.trim();
+            
+            if (!name || !content) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            addCustomBook(name, content);
+            hideAddBookModal();
+            renderBooks();
+            renderStats();
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            renderBooks();
+            renderStats();
+            
+            // 应用保存的主题模式
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-toggle').textContent = '切换到日间模式';
+            }
+        });
+
+        // 键盘导航
+        document.addEventListener('keydown', function(e) {
+            // 按ESC键关闭模态框
+            if (e.key === 'Escape') {
+                hideSettingsModal();
+                hideAddBookModal();
+                hideResetConfirm();
+            }
+            
+            // 在阅读页面按空格键打卡
+            if (e.key === ' ' && document.getElementById('reading-page').classList.contains('active')) {
+                e.preventDefault();
+                incrementReading();
+            }
+        });
+
+        // 手势滑动支持
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (document.getElementById('reading-page').classList.contains('active')) {
+                    const book = books.find(b => b.id === currentBookId);
+                    if (book) {
+                        if (diff > 0 && currentChapterIndex < book.chapters.length - 1) {
+                            // 向左滑动，下一章
+                            showChapterReading(currentBookId, currentChapterIndex + 1);
+                        } else if (diff < 0 && currentChapterIndex > 0) {
+                            // 向右滑动，上一章
+                            showChapterReading(currentBookId, currentChapterIndex - 1);
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
